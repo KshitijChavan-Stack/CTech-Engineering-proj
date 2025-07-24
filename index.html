@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>C-Tech - Home</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background: #fff;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .bg-blob {
+      position: fixed;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.95;
+      filter: blur(0.5px);
+    }
+    .bg-blob.center {
+      top: 50%;
+      left: 79%;
+      width: 900px;
+      height: 700px;
+      transform: translate(-50%, -50%);
+    }
+    .bg-blob.topleft {
+      top: -180px;
+      left: -180px;
+      width: 500px;
+      height: 400px;
+      transform: rotate(-15deg);
+      opacity: 0.8;
+    }
+    .bg-blob.topright {
+      top: -120px;
+      right: -120px;
+      width: 400px;
+      height: 300px;
+      transform: rotate(20deg);
+      opacity: 0.8;
+    }
+    .bg-blob.bottomleft {
+      bottom: -180px;
+      left: -180px;
+      width: 500px;
+      height: 400px;
+      transform: rotate(10deg);
+      opacity: 0.8;
+    }
+    .bg-blob.accentleft {
+      top: 38%;
+      left: 25%;
+      width: 480px;
+      height: 340px;
+      transform: translate(-50%, -50%) rotate(-12deg);
+      opacity: 1;
+      z-index: 0;
+    }
+    .main-content {
+      position: relative;
+      z-index: 2;
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      margin-top: -40px;
+    }
+    .main-content h1 {
+      font-size: 4rem;
+      font-weight: 800;
+      color: #fff;
+      text-align: center;
+      letter-spacing: 2px;
+      margin: 0;
+      line-height: 1.1;
+      text-shadow: 0 8px 32px rgba(44,0,80,0.25);
+    }
+    @media (max-width: 900px) {
+      .bg-blob.center {
+        width: 600px;
+        height: 400px;
+      }
+      .main-content h1 {
+        font-size: 2.2rem;
+      }
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      background: transparent;
+      width: 100%;
+      min-height: 90px;
+      position: relative;
+      z-index: 10;
+    }
+    .navbar-logo-bg {
+      background: transparent;
+      width: 220px;
+      min-height: 90px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .navbar-logo-bg .logo-svg {
+      width: 60px;
+      height: 60px;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .navbar-logo-bg .logo-text {
+      color: #d12c8a;
+      font-size: 1.2rem;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-align: center;
+    }
+    .navbar-links {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 48px;
+    }
+    .navbar-links a {
+      color: #1a2530;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 500;
+      font-family: inherit;
+      transition: color 0.2s;
+    }
+    .navbar-links a:hover {
+      color: #d12c8a;
+    }
+    @media (max-width: 700px) {
+      .navbar {
+        flex-direction: column;
+        min-height: unset;
+      }
+      .navbar-logo-bg {
+        width: 100%;
+        min-height: 70px;
+      }
+      .navbar-links {
+        flex-direction: column;
+        gap: 18px;
+        padding: 12px 0;
+      }
+    }
+    .subtitle {
+      margin-top: 18px;
+      font-size: 1.2rem;
+      color: #444;
+      opacity: 0;
+      font-weight: 400;
+      letter-spacing: 1px;
+      text-align: center;
+      font-family: 'Montserrat', Arial, sans-serif;
+      transition: opacity 0.6s cubic-bezier(.4,0,.2,1);
+      pointer-events: none;
+    }
+    .subtitle.show {
+      opacity: 0.75;
+    }
+    .cta-section {
+      width: 100%;
+      min-height: 60vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      background: transparent;
+      padding: 0;
+      opacity: 0;
+      transform: translateY(60px);
+      transition: opacity 0.8s cubic-bezier(.4,0,.2,1), transform 0.8s cubic-bezier(.4,0,.2,1);
+    }
+    .cta-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .cta-form-container {
+      max-width: 480px;
+      margin: 80px 0 0 7vw;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      background: transparent;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 0;
+    }
+    .cta-texts {
+      margin-bottom: 24px;
+    }
+    .cta-top {
+      color: #e94e77;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      margin-top: 40px;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .cta-main {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: #222;
+      margin-bottom: 8px;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .cta-sub {
+      color: #7b2ff2;
+      font-size: 1rem;
+      margin-bottom: 18px;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .cta-form {
+      display: flex;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .cta-form input[type="email"] {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 6px 0 0 6px;
+      font-size: 1rem;
+      background: #f7f7fa;
+      color: #222;
+      outline: none;
+      box-shadow: 0 1px 4px 0 rgba(123,47,242,0.04);
+      transition: box-shadow 0.2s;
+    }
+    .cta-form input[type="email"]:focus {
+      box-shadow: 0 2px 8px 0 rgba(123,47,242,0.10);
+    }
+    .cta-form button {
+      background: #e94e77;
+      color: #fff;
+      border: none;
+      border-radius: 0 6px 6px 0;
+      padding: 0 22px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cta-form button:hover {
+      background: #d12c8a;
+    }
+    .cta-example {
+      color: #bdbdbd;
+      font-size: 0.95rem;
+      margin-top: 2px;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    @media (max-width: 900px) {
+      .cta-form-container {
+        margin: 40px auto 0 auto;
+        padding: 28px 12px 20px 12px;
+        max-width: 98vw;
+      }
+      .cta-section {
+        justify-content: center;
+      }
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+      background: #f7f7fa;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(120deg, #a1e8f5 0%, #7b2ff2 100%);
+      border-radius: 8px;
+      min-height: 40px;
+      box-shadow: 0 2px 8px rgba(123,47,242,0.08);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(120deg, #7b2ff2 0%, #e94e77 100%);
+    }
+    ::-webkit-scrollbar-corner {
+      background: #f7f7fa;
+    }
+    /* Firefox */
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: #7b2ff2 #f7f7fa;
+    }
+    .cta-flex {
+      display: flex;
+      align-items: flex-start;
+      width: 100%;
+      gap: 48px;
+      justify-content: flex-start;
+    }
+    .cta-img-container {
+      position: relative;
+      width: 370px;
+      min-width: 220px;
+      max-width: 100%;
+      height: 340px;
+      margin: 80px 0 0 0;
+      border-radius: 32px 32px 64px 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px 0 rgba(44,0,80,0.13);
+      background: linear-gradient(120deg, #fff 60%, #f8f3ff 100%);
+      flex-shrink: 0;
+    }
+    .cta-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 32px 32px 64px 16px;
+      filter: brightness(0.93) contrast(1.08);
+      z-index: 1;
+      position: relative;
+    }
+    .cta-img-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(123,47,242,0.08) 0%, rgba(233,78,119,0.07) 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+    @media (max-width: 1100px) {
+      .cta-flex {
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+      }
+      .cta-img-container {
+        margin: 32px auto 0 auto;
+        width: 90vw;
+        height: 220px;
+        border-radius: 24px 24px 40px 12px;
+      }
+    }
+    .section-heading {
+      text-align: center;
+      font-size: 2.3rem;
+      font-weight: 800;
+      margin: 60px 0 30px 0;
+      color: #222;
+      letter-spacing: 1px;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .features-section {
+      width: 100%;
+      background: linear-gradient(120deg, #f8f3ff 0%, #eafafd 100%);
+      padding: 30px 0 60px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      max-width: 1100px;
+      width: 90vw;
+      margin: 0 auto;
+    }
+    .feature-card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px 0 rgba(123,47,242,0.07);
+      padding: 32px 24px 28px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: box-shadow 0.2s, transform 0.2s;
+      min-height: 210px;
+    }
+    .feature-card:hover {
+      box-shadow: 0 8px 32px 0 rgba(123,47,242,0.13);
+      transform: translateY(-4px) scale(1.03);
+    }
+    .feature-icon {
+      font-size: 2.2rem;
+      margin-bottom: 18px;
+      background: linear-gradient(120deg, #7b2ff2 0%, #a1e8f5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .feature-title {
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 8px;
+      text-align: center;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .feature-desc {
+      font-size: 0.98rem;
+      color: #666;
+      text-align: center;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    @media (max-width: 900px) {
+      .features-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+    }
+    @media (max-width: 600px) {
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .feature-card {
+        padding: 22px 10px 18px 10px;
+      }
+    }
+    .process-section {
+      background: #eaf3f7;
+      padding: 60px 0 80px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .process-header {
+      max-width: 700px;
+      margin: 0 auto 48px auto;
+      text-align: left;
+    }
+    .process-label {
+      font-size: 0.95rem;
+      color: #7b2ff2;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .process-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #222;
+      margin-bottom: 10px;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .process-desc {
+      color: #444;
+      font-size: 1.08rem;
+      opacity: 0.85;
+      margin-bottom: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .process-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 56px;
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .process-timeline:before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(180deg, #a1e8f5 0%, #7b2ff2 100%);
+      transform: translateX(-50%);
+      border-radius: 2px;
+      opacity: 0.18;
+      z-index: 0;
+    }
+    .process-step {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+      position: relative;
+      z-index: 1;
+    }
+    .process-step:nth-child(odd) {
+      flex-direction: row;
+    }
+    .process-step:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+    .process-img-wrap {
+      width: 220px;
+      height: 170px;
+      border-radius: 24px 60px 24px 24px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px 0 rgba(123,47,242,0.09);
+      background: #fff;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .process-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .process-content {
+      background: none;
+      padding: 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-width: 220px;
+      max-width: 340px;
+    }
+    .process-step-num {
+      width: 36px;
+      height: 36px;
+      background: #7b2ff2;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      margin-top: 2px;
+      box-shadow: 0 2px 8px 0 rgba(123,47,242,0.10);
+    }
+    .process-step-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 6px;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .process-step-desc {
+      font-size: 0.98rem;
+      color: #444;
+      opacity: 0.85;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    @media (max-width: 900px) {
+      .process-timeline {
+        gap: 32px;
+      }
+      .process-step {
+        gap: 18px;
+      }
+      .process-img-wrap {
+        width: 120px;
+        height: 90px;
+        border-radius: 16px 32px 16px 16px;
+      }
+      .process-content {
+        min-width: 120px;
+        max-width: 220px;
+      }
+    }
+    @media (max-width: 600px) {
+      .process-header {
+        text-align: center;
+      }
+      .process-timeline:before {
+        left: 12px;
+        width: 2px;
+        transform: none;
+      }
+      .process-step {
+        flex-direction: column !important;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .process-img-wrap {
+        width: 100vw;
+        max-width: 320px;
+        height: 120px;
+        margin: 0 auto;
+      }
+      .process-content {
+        min-width: 0;
+        max-width: 100vw;
+        align-items: flex-start;
+      }
+      .process-step-num {
+        margin-bottom: 6px;
+      }
+    }
+    .process-step {
+      opacity: 1;
+      transition: opacity 0.8s cubic-bezier(.4,0,.2,1), transform 0.8s cubic-bezier(.4,0,.2,1);
+      transform: translateY(0);
+    }
+    .process-step.process-hidden {
+      opacity: 0;
+      transform: translateY(40px);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- SVG BLOBS: background only -->
+  <svg class="bg-blob center" viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="centerBlobGrad" cx="70%" cy="30%" r="80%">
+          <stop offset="0%" stop-color="#a1e8f5" stop-opacity="0.55"/>
+          <stop offset="60%" stop-color="#7b2ff2" stop-opacity="0.38"/>
+          <stop offset="100%" stop-color="#f357a8" stop-opacity="0.32"/>
+        </radialGradient>
+      </defs>
+      <path fill="url(#centerBlobGrad)" d="M700,100Q800,200,780,320Q760,440,650,500Q540,560,400,600Q260,640,200,520Q140,400,120,300Q100,200,220,120Q340,40,500,60Q660,80,700,100Z"/>
+    </svg>
+    <svg class="bg-blob topleft" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="tlBlobGrad" cx="60%" cy="40%" r="80%">
+          <stop offset="0%" stop-color="#f357a8" stop-opacity="0.7"/>
+          <stop offset="60%" stop-color="#7b2ff2" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#2b86c5" stop-opacity="0.4"/>
+        </radialGradient>
+      </defs>
+      <path fill="url(#tlBlobGrad)" d="M100,60Q60,160,180,120Q300,80,340,180Q380,280,260,340Q140,400,80,300Q20,200,100,60Z"/>
+    </svg>
+    <svg class="bg-blob topright" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="trBlobGrad" cx="60%" cy="40%" r="80%">
+          <stop offset="0%" stop-color="#a1e8f5" stop-opacity="0.7"/>
+          <stop offset="60%" stop-color="#7b2ff2" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#f357a8" stop-opacity="0.4"/>
+        </radialGradient>
+      </defs>
+      <path fill="url(#trBlobGrad)" d="M300,40Q380,100,340,180Q300,260,200,240Q100,220,60,140Q20,60,120,40Q220,20,300,40Z"/>
+    </svg>
+    <svg class="bg-blob bottomleft" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="blBlobGrad" cx="60%" cy="40%" r="80%">
+          <stop offset="0%" stop-color="#f357a8" stop-opacity="0.7"/>
+          <stop offset="60%" stop-color="#7b2ff2" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#2b86c5" stop-opacity="0.4"/>
+        </radialGradient>
+      </defs>
+      <path fill="url(#blBlobGrad)" d="M100,300Q60,200,180,240Q300,280,340,180Q380,80,260,20Q140,-40,80,60Q20,160,100,300Z"/>
+    </svg>
+    <svg class="bg-blob accentleft" viewBox="0 0 480 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="accentLeftBlobGrad" cx="60%" cy="40%" r="80%">
+          <stop offset="0%" stop-color="#a1e8f5" stop-opacity="0.35"/>
+          <stop offset="60%" stop-color="#7b2ff2" stop-opacity="0.22"/>
+          <stop offset="100%" stop-color="#f357a8" stop-opacity="0.18"/>
+        </radialGradient>
+      </defs>
+      <path fill="url(#accentLeftBlobGrad)" d="M320,60Q400,120,380,200Q360,280,240,320Q120,360,80,240Q40,120,160,80Q280,40,320,60Z"/>
+    </svg>
+
+  <!-- MAIN CONTENT: all sections, z-index: 1+ -->
+  <div style="position:relative; z-index:2;">
+    <div class="navbar">
+      <div class="navbar-logo-bg">
+        <!-- Engineering-themed SVG logo -->
+        <svg class="logo-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Gear -->
+          <g>
+            <circle cx="24" cy="24" r="12" fill="#7b2ff2" fill-opacity="0.85"/>
+            <circle cx="24" cy="24" r="7" fill="#fff" fill-opacity="0.95"/>
+            <g stroke="#7b2ff2" stroke-width="2" stroke-linecap="round">
+              <line x1="24" y1="4" x2="24" y2="12"/>
+              <line x1="24" y1="36" x2="24" y2="44"/>
+              <line x1="4" y1="24" x2="12" y2="24"/>
+              <line x1="36" y1="24" x2="44" y2="24"/>
+              <line x1="10.5" y1="10.5" x2="16.5" y2="16.5"/>
+              <line x1="31.5" y1="31.5" x2="37.5" y2="37.5"/>
+              <line x1="10.5" y1="37.5" x2="16.5" y2="31.5"/>
+              <line x1="31.5" y1="16.5" x2="37.5" y2="10.5"/>
+            </g>
+          </g>
+          <!-- Circuit lines -->
+          <g stroke="#00bcd4" stroke-width="1.5" stroke-linecap="round">
+            <line x1="24" y1="4" x2="24" y2="0"/>
+            <line x1="44" y1="24" x2="48" y2="24"/>
+          </g>
+        </svg>
+        <div class="logo-text" style="color:#7b2ff2;font-weight:700;letter-spacing:2px;font-size:1.3rem;">C-Tech</div>
+      </div>
+      <nav class="navbar-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="work.html">Our Work</a>
+        <a href="employee.html">Employee</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+
+    <div class="main-content">
+      <h1>
+        <span id="typed-text"></span><span class="cursor">|</span>
+      </h1>
+      <div class="subtitle" id="subtitle">we design we create and we maintain</div>
+    </div>
+
+    <section class="cta-section" id="cta-section">
+      <div class="cta-flex">
+        <div class="cta-form-container">
+          <div class="cta-texts">
+            <div class="cta-top">be a part of glowing engineering</div>
+            <div class="cta-main">World-class engineering maintenance and support</div>
+            <div class="cta-sub">Send your email address and we'll connect with you</div>
+          </div>
+          <form class="cta-form" onsubmit="event.preventDefault();">
+            <input type="email" placeholder="Enter your email address" required />
+            <button type="submit"><span>&#128231;</span></button>
+          </form>
+          <div class="cta-example">Ex. john@email.com</div>
+        </div>
+        <!-- <div class="cta-img-container">
+          <div class="cta-img-overlay"></div>
+          <img src="Frontend-images/Form-img.jpg" alt="Engineering Room" class="cta-img" /> -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURES SECTION ===== -->
+    <!-- features.html -->
+    <h2 class="section-heading">What we actually do</h2>
+    <div class="features-section">
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-title">Secure Transactions</div>
+          <div class="feature-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚙️</div>
+          <div class="feature-title">Flexibility</div>
+          <div class="feature-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👍</div>
+          <div class="feature-title">User Friendly</div>
+          <div class="feature-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔗</div>
+          <div class="feature-title">Easy API Integration</div>
+          <div class="feature-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💸</div>
+          <div class="feature-title">Easy Withdrawal & Deposit</div>
+          <div class="feature-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <div class="feature-title">Extended Crypto Support</div>
+          <div class="feature-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.</div>
+        </div>
+      </div>
+    </div>
+    <!-- ===== END FEATURES SECTION ===== -->
+
+    <!-- ===== PROCESS SECTION ===== -->
+    <!-- process.html -->
+    <section class="process-section">
+      <div class="process-header">
+        <div class="process-label">OUR PROCESS</div>
+        <div class="process-title">How we start a new project for maintenance</div>
+        <div class="process-desc">We follow a proven, transparent process to ensure your engineering maintenance project is a success from day one.</div>
+      </div>
+      <div class="process-timeline">
+        <div class="process-step process-hidden">
+          <div class="process-img-wrap">
+            <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80" alt="Step 1" />
+          </div>
+          <div class="process-content">
+            <div class="process-step-num">1</div>
+            <div class="process-step-title">Initial Consultation</div>
+            <div class="process-step-desc">We meet with you to understand your needs, goals, and current systems. This helps us tailor our approach for your unique requirements.</div>
+          </div>
+        </div>
+        <div class="process-step process-hidden">
+          <div class="process-img-wrap">
+            <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" alt="Step 2" />
+          </div>
+          <div class="process-content">
+            <div class="process-step-num">2</div>
+            <div class="process-step-title">Site Assessment & Planning</div>
+            <div class="process-step-desc">Our team conducts a thorough assessment and develops a detailed maintenance plan, including timelines and deliverables.</div>
+          </div>
+        </div>
+        <div class="process-step process-hidden">
+          <div class="process-img-wrap">
+            <img src="https://images.unsplash.com/photo-1503389152951-9c3d029fd6a0?auto=format&fit=crop&w=400&q=80" alt="Step 3" />
+          </div>
+          <div class="process-content">
+            <div class="process-step-num">3</div>
+            <div class="process-step-title">Kickoff & Ongoing Support</div>
+            <div class="process-step-desc">We launch the project, keep you updated at every stage, and provide ongoing support to ensure smooth operations and continuous improvement.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ===== END PROCESS SECTION ===== -->
+  </div>
+
+  <!-- SCRIPTS: at end of body -->
+  <script>
+    // Fade in/out CTA section on scroll
+    const ctaSection = document.getElementById('cta-section');
+    const observer = new window.IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          ctaSection.classList.add('visible');
+        } else {
+          ctaSection.classList.remove('visible');
+        }
+      },
+      { threshold: 0.2 }
+    );
+    observer.observe(ctaSection);
+
+    // Animate process steps one by one every time section is in view
+    document.addEventListener('DOMContentLoaded', function() {
+      const steps = document.querySelectorAll('.process-step');
+      const processSection = document.querySelector('.process-section');
+      let animating = false;
+      function resetSteps() {
+        steps.forEach(step => step.classList.add('process-hidden'));
+      }
+      function showStep(idx) {
+        if (idx < steps.length) {
+          steps[idx].classList.remove('process-hidden');
+          setTimeout(() => showStep(idx + 1), 1000);
+        } else {
+          animating = false;
+        }
+      }
+      const processObserver = new window.IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting && !animating) {
+            animating = true;
+            resetSteps();
+            setTimeout(() => showStep(0), 200); // slight delay for reset
+          }
+        },
+        { threshold: 0.2 }
+      );
+      processObserver.observe(processSection);
+    });
+  </script>
+  <script>
+    // Typing animation for main heading
+    document.addEventListener('DOMContentLoaded', function() {
+      const text = "C-Tech Engineering!";
+      const typedText = document.getElementById('typed-text');
+      const cursor = document.querySelector('.cursor');
+      const subtitle = document.getElementById('subtitle');
+      let i = 0;
+      let typing = true;
+      function typeLoop() {
+        if (typing) {
+          if (i === 0) {
+            subtitle.classList.remove('show');
+          }
+          if (i < text.length) {
+            typedText.textContent += text.charAt(i);
+            i++;
+            setTimeout(typeLoop, 90);
+          } else {
+            subtitle.classList.add('show');
+            typing = false;
+            setTimeout(typeLoop, 10000); // Pause for 10 seconds after typing
+          }
+        } else {
+          if (i > 0) {
+            subtitle.classList.remove('show');
+            typedText.textContent = text.substring(0, i - 1);
+            i--;
+            setTimeout(typeLoop, 50);
+          } else {
+            typing = true;
+            setTimeout(typeLoop, 400); // Short pause before typing again
+          }
+        }
+      }
+      typeLoop();
+    });
+  </script>
+</body>
+</html>
