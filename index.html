@@ -99,21 +99,20 @@
     .navbar {
       display: flex;
       align-items: center;
-      background: transparent;
+      background: #f3f4f6;
       width: 100%;
       min-height: 90px;
       position: relative;
       z-index: 10;
+      justify-content: center;
+      flex-direction: row;
     }
     .navbar-logo-bg {
-      background: transparent;
-      width: 220px;
-      min-height: 90px;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      position: relative;
+      justify-content: flex-start;
+      margin-right: 32px;
+      margin-left: 32px;
     }
     .navbar-logo-bg .logo-svg {
       width: 60px;
@@ -130,22 +129,38 @@
       text-align: center;
     }
     .navbar-links {
-      flex: 1;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 48px;
+      background: #e5e7eb;
+      border-radius: 32px;
+      box-shadow: 0 1px 4px 0 rgba(44,0,80,0.04);
+      padding: 4px 8px;
+      gap: 0;
+      margin: 24px 0 0 0;
+      flex: 0 1 auto;
     }
     .navbar-links a {
-      color: #1a2530;
+      color: #6b7280;
       text-decoration: none;
-      font-size: 1.1rem;
+      font-size: 1.08rem;
       font-weight: 500;
       font-family: inherit;
-      transition: color 0.2s;
+      padding: 10px 32px;
+      border-radius: 24px;
+      transition: background 0.2s, color 0.2s;
+      background: none;
+      border: none;
+      margin: 0;
+      outline: none;
+    }
+    .navbar-links a.active, .navbar-links a:focus {
+      background: #fff;
+      color: #222;
+      font-weight: 700;
+      box-shadow: 0 1px 4px 0 rgba(44,0,80,0.04);
     }
     .navbar-links a:hover {
-      color: #d12c8a;
+      background: #f3f4f6;
+      color: #222;
     }
     @media (max-width: 700px) {
       .navbar {
@@ -155,11 +170,56 @@
       .navbar-logo-bg {
         width: 100%;
         min-height: 70px;
+        margin-left: 8px;
+        margin-right: 8px;
       }
       .navbar-links {
         flex-direction: column;
         gap: 18px;
         padding: 12px 0;
+      }
+    }
+    .navbar-hamburger {
+      display: none;
+      position: absolute;
+      right: 24px;
+      top: 28px;
+      width: 36px;
+      height: 36px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 20;
+    }
+    .navbar-hamburger span {
+      display: block;
+      width: 28px;
+      height: 4px;
+      margin: 5px auto;
+      background: #7b2ff2;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+    @media (max-width: 700px) {
+      .navbar-links {
+        display: none;
+        position: absolute;
+        top: 70px;
+        right: 12px;
+        background: #fff;
+        flex-direction: column;
+        gap: 0;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px 0 rgba(44,0,80,0.13);
+        padding: 12px 0;
+        min-width: 160px;
+        z-index: 19;
+      }
+      .navbar-links.show {
+        display: flex;
+      }
+      .navbar-hamburger {
+        display: block;
       }
     }
     .subtitle {
@@ -379,19 +439,23 @@
       margin: 0 auto;
     }
     .feature-card {
-      background: #fff;
+      background: #fff !important;
+      opacity: 1 !important;
       border-radius: 18px;
       box-shadow: 0 4px 24px 0 rgba(123,47,242,0.07);
       padding: 32px 24px 28px 24px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: box-shadow 0.2s, transform 0.2s;
+      transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
       min-height: 210px;
+      position: relative;
+      z-index: 1;
     }
     .feature-card:hover {
       box-shadow: 0 8px 32px 0 rgba(123,47,242,0.13);
       transform: translateY(-4px) scale(1.03);
+      /* No background change on hover */
     }
     .feature-icon {
       font-size: 2.2rem;
@@ -670,37 +734,60 @@
       <path fill="url(#accentLeftBlobGrad)" d="M320,60Q400,120,380,200Q360,280,240,320Q120,360,80,240Q40,120,160,80Q280,40,320,60Z"/>
     </svg>
 
+  <!-- Logo in top left corner -->
+  <div class="site-logo-corner">
+    <svg class="logo-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g>
+        <circle cx="24" cy="24" r="12" fill="#7b2ff2" fill-opacity="0.85"/>
+        <circle cx="24" cy="24" r="7" fill="#fff" fill-opacity="0.95"/>
+        <g stroke="#7b2ff2" stroke-width="2" stroke-linecap="round">
+          <line x1="24" y1="4" x2="24" y2="12"/>
+          <line x1="24" y1="36" x2="24" y2="44"/>
+          <line x1="4" y1="24" x2="12" y2="24"/>
+          <line x1="36" y1="24" x2="44" y2="24"/>
+          <line x1="10.5" y1="10.5" x2="16.5" y2="16.5"/>
+          <line x1="31.5" y1="31.5" x2="37.5" y2="37.5"/>
+          <line x1="10.5" y1="37.5" x2="16.5" y2="31.5"/>
+          <line x1="31.5" y1="16.5" x2="37.5" y2="10.5"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <style>
+    .site-logo-corner {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      z-index: 100;
+      background: none;
+      padding: 0;
+    }
+    .site-logo-corner .logo-svg {
+      width: 48px;
+      height: 48px;
+      display: block;
+    }
+    @media (max-width: 600px) {
+      .site-logo-corner {
+        top: 8px;
+        left: 8px;
+      }
+      .site-logo-corner .logo-svg {
+        width: 32px;
+        height: 32px;
+      }
+    }
+  </style>
   <!-- MAIN CONTENT: all sections, z-index: 1+ -->
   <div style="position:relative; z-index:2;">
     <div class="navbar">
-      <div class="navbar-logo-bg">
-        <!-- Engineering-themed SVG logo -->
-        <svg class="logo-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Gear -->
-          <g>
-            <circle cx="24" cy="24" r="12" fill="#7b2ff2" fill-opacity="0.85"/>
-            <circle cx="24" cy="24" r="7" fill="#fff" fill-opacity="0.95"/>
-            <g stroke="#7b2ff2" stroke-width="2" stroke-linecap="round">
-              <line x1="24" y1="4" x2="24" y2="12"/>
-              <line x1="24" y1="36" x2="24" y2="44"/>
-              <line x1="4" y1="24" x2="12" y2="24"/>
-              <line x1="36" y1="24" x2="44" y2="24"/>
-              <line x1="10.5" y1="10.5" x2="16.5" y2="16.5"/>
-              <line x1="31.5" y1="31.5" x2="37.5" y2="37.5"/>
-              <line x1="10.5" y1="37.5" x2="16.5" y2="31.5"/>
-              <line x1="31.5" y1="16.5" x2="37.5" y2="10.5"/>
-            </g>
-          </g>
-          <!-- Circuit lines -->
-          <g stroke="#00bcd4" stroke-width="1.5" stroke-linecap="round">
-            <line x1="24" y1="4" x2="24" y2="0"/>
-            <line x1="44" y1="24" x2="48" y2="24"/>
-          </g>
-        </svg>
-        <div class="logo-text" style="color:#7b2ff2;font-weight:700;letter-spacing:2px;font-size:1.3rem;">C-Tech</div>
-      </div>
-      <nav class="navbar-links">
-        <a href="index.html">Home</a>
+      <button class="navbar-hamburger" id="navbarHamburger" aria-label="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="navbar-links" id="navbarLinks">
+        <a href="index.html" class="active">Home</a>
         <a href="about.html">About Us</a>
         <a href="work.html">Our Work</a>
         <a href="employee.html">Employee</a>
@@ -902,5 +989,166 @@
       typeLoop();
     });
   </script>
+  <!-- Hamburger menu toggle -->
+  <script>
+    const hamburger = document.getElementById('navbarHamburger');
+    const navLinks = document.getElementById('navbarLinks');
+    hamburger.addEventListener('click', function() {
+      navLinks.classList.toggle('show');
+    });
+    // Optional: Hide menu when a link is clicked (mobile UX)
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('show');
+      });
+    });
+  </script>
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <!-- Logo SVG only, no text -->
+        <svg class="footer-logo-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <circle cx="24" cy="24" r="12" fill="#7b2ff2" fill-opacity="0.85"/>
+            <circle cx="24" cy="24" r="7" fill="#fff" fill-opacity="0.95"/>
+            <g stroke="#7b2ff2" stroke-width="2" stroke-linecap="round">
+              <line x1="24" y1="4" x2="24" y2="12"/>
+              <line x1="24" y1="36" x2="24" y2="44"/>
+              <line x1="4" y1="24" x2="12" y2="24"/>
+              <line x1="36" y1="24" x2="44" y2="24"/>
+              <line x1="10.5" y1="10.5" x2="16.5" y2="16.5"/>
+              <line x1="31.5" y1="31.5" x2="37.5" y2="37.5"/>
+              <line x1="10.5" y1="37.5" x2="16.5" y2="31.5"/>
+              <line x1="31.5" y1="16.5" x2="37.5" y2="10.5"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">HOW WE HELP</div>
+          <a href="#" class="footer-link">Prior Authorization</a>
+          <a href="#" class="footer-link">Insurance Monitoring</a>
+          <a href="#" class="footer-link">Benefit Checks</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">COMPANY</div>
+          <a href="#" class="footer-link">About</a>
+          <a href="#" class="footer-link">Case Studies</a>
+          <a href="#" class="footer-link">Resources</a>
+          <a href="#" class="footer-link">Careers</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <style>
+    .site-footer {
+      background: #2a162a;
+      color: #fff;
+      padding: 36px 0 32px 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+      margin-top: 60px;
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 32px;
+      padding: 0 32px;
+    }
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 18px;
+    }
+    .footer-logo-svg {
+      width: 54px;
+      height: 54px;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .footer-socials {
+      display: flex;
+      gap: 10px;
+    }
+    .footer-social {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #3a223a;
+      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      transition: background 0.2s;
+      margin-right: 2px;
+    }
+    .footer-social:hover {
+      background: #7b2ff2;
+    }
+    .footer-links {
+      display: flex;
+      gap: 64px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 160px;
+    }
+    .footer-col-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #bdbdbd;
+      letter-spacing: 1.2px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .footer-link {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.05rem;
+      opacity: 0.85;
+      transition: color 0.2s, opacity 0.2s;
+    }
+    .footer-link:hover {
+      color: #a1e8f5;
+      opacity: 1;
+    }
+    @media (max-width: 900px) {
+      .footer-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 32px;
+        padding: 0 12px;
+      }
+      .footer-links {
+        gap: 32px;
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+    @media (max-width: 600px) {
+      .site-footer {
+        padding: 24px 0 18px 0;
+      }
+      .footer-content {
+        gap: 18px;
+        padding: 0 4px;
+      }
+      .footer-logo-svg {
+        width: 38px;
+        height: 38px;
+      }
+      .footer-col {
+        min-width: 120px;
+      }
+    }
+  </style>
 </body>
 </html>

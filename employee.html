@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Registration - C-Tech</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: #23182b;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      height: 100vh;
+    }
+    .split {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-width: 0;
+      min-height: 0;
+    }
+    .split.left {
+      background: linear-gradient(120deg, #2d1a3a 60%, #6e5bb7 100%);
+      position: relative;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 48px 32px 32px 48px;
+      overflow: hidden;
+    }
+    .split.left::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1145&q=80') center/cover no-repeat;
+      opacity: 0.45;
+      z-index: 0;
+    }
+    .logo {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 64px;
+    }
+    .logo-svg {
+      width: 44px;
+      height: 44px;
+      display: block;
+    }
+    .logo-text {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #fff;
+    }
+    .back-link {
+      position: absolute;
+      top: 32px;
+      left: 32px;
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      border: none;
+      border-radius: 18px;
+      padding: 8px 24px;
+      font-size: 1.1rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+      z-index: 10;
+      display: inline-block;
+      box-shadow: 0 2px 8px 0 rgba(44,0,80,0.10);
+    }
+    .back-link:hover {
+      background: rgba(123,47,242,0.18);
+      color: #fff;
+    }
+    .tagline {
+      position: relative;
+      z-index: 1;
+      font-size: 1.35rem;
+      font-weight: 500;
+      margin-top: 180px;
+      margin-left: 8px;
+      color: #fff;
+      text-shadow: 0 2px 12px #23182b44;
+    }
+    .split.right {
+      background: #2a223a;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-width: 0;
+      min-height: 0;
+      padding: 0 32px;
+    }
+    .form-container {
+      background: rgba(44, 34, 60, 0.98);
+      border-radius: 18px;
+      box-shadow: 0 4px 32px 0 rgba(44,0,80,0.13);
+      padding: 44px 24px 32px 24px;
+      min-width: 340px;
+      max-width: 400px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      box-sizing: border-box;
+    }
+    .form-title {
+      font-size: 2.1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    .form-sub {
+      color: #bdbdbd;
+      font-size: 1rem;
+      margin-bottom: 24px;
+    }
+    .form-row {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 18px;
+    }
+    .form-row input {
+      flex: 1 1 0;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .form-input {
+      background: #23182b;
+      border: 1.5px solid #3a2a4a;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 1rem;
+      color: #fff;
+      margin-bottom: 18px;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .form-input:focus {
+      border: 1.5px solid #7b2ff2;
+    }
+    .form-checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      font-size: 0.98rem;
+      color: #bdbdbd;
+    }
+    .form-checkbox-row input[type="checkbox"] {
+      accent-color: #7b2ff2;
+      width: 18px;
+      height: 18px;
+    }
+    .form-checkbox-row a {
+      color: #a1e8f5;
+      text-decoration: underline;
+      font-size: 0.98rem;
+    }
+    .form-btn {
+      background: linear-gradient(90deg, #7b2ff2 0%, #a1e8f5 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .form-btn:hover {
+      background: linear-gradient(90deg, #a1e8f5 0%, #7b2ff2 100%);
+    }
+    .form-or {
+      text-align: center;
+      color: #bdbdbd;
+      margin: 10px 0 14px 0;
+      font-size: 0.98rem;
+      position: relative;
+    }
+    .form-or:before, .form-or:after {
+      content: '';
+      display: inline-block;
+      width: 40px;
+      height: 1.5px;
+      background: #3a2a4a;
+      vertical-align: middle;
+      margin: 0 8px;
+    }
+    .form-socials {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+    .form-social-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #23182b;
+      color: #fff;
+      border: 1.5px solid #3a2a4a;
+      border-radius: 8px;
+      padding: 10px 0;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border 0.2s, background 0.2s;
+    }
+    .form-social-btn:hover {
+      border: 1.5px solid #7b2ff2;
+      background: #2a223a;
+    }
+    .form-social-btn svg {
+      width: 22px;
+      height: 22px;
+      vertical-align: middle;
+    }
+    .form-login-link {
+      color: #a1e8f5;
+      text-decoration: underline;
+      font-size: 1rem;
+      margin-left: 6px;
+    }
+    @media (max-width: 900px) {
+      body {
+        flex-direction: column;
+      }
+      .split.left, .split.right {
+        width: 100vw;
+        min-height: 40vh;
+        padding: 32px 8vw;
+      }
+      .form-container {
+        min-width: 0;
+        width: 100%;
+        max-width: 98vw;
+      }
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.98rem;
+      }
+      .split.left, .split.right {
+        width: 100vw;
+        min-height: unset;
+        padding: 10px 2vw;
+        display: block;
+      }
+      .logo {
+        margin-top: 54px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .logo-text {
+        font-size: 1.1rem;
+      }
+      .form-container {
+        padding: 10px 2px 8px 2px;
+        min-width: 0;
+        width: 100%;
+        max-width: 100vw;
+      }
+      .form-row {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .form-input {
+        font-size: 1rem;
+        padding: 10px 8px;
+      }
+      .form-btn, .form-social-btn {
+        width: 100%;
+        font-size: 1.05rem;
+        padding: 12px 0;
+      }
+      .back-link {
+        top: 8px;
+        left: 8px;
+        padding: 6px 10px;
+        font-size: 0.95rem;
+      }
+      .tagline {
+        font-size: 1rem;
+        margin-top: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-link">&#8592; Back to website</a>
+  <div class="split left">
+    <div class="logo" style="margin-top: 64px;">
+      <svg class="logo-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g>
+          <circle cx="24" cy="24" r="12" fill="#7b2ff2" fill-opacity="0.85"/>
+          <circle cx="24" cy="24" r="7" fill="#fff" fill-opacity="0.95"/>
+          <g stroke="#7b2ff2" stroke-width="2" stroke-linecap="round">
+            <line x1="24" y1="4" x2="24" y2="12"/>
+            <line x1="24" y1="36" x2="24" y2="44"/>
+            <line x1="4" y1="24" x2="12" y2="24"/>
+            <line x1="36" y1="24" x2="44" y2="24"/>
+            <line x1="10.5" y1="10.5" x2="16.5" y2="16.5"/>
+            <line x1="31.5" y1="31.5" x2="37.5" y2="37.5"/>
+            <line x1="10.5" y1="37.5" x2="16.5" y2="31.5"/>
+            <line x1="31.5" y1="16.5" x2="37.5" y2="10.5"/>
+          </g>
+        </g>
+      </svg>
+      <span class="logo-text">C-Tech</span>
+    </div>
+    <div class="tagline">Lets make a new start &amp; grow together</div>
+  </div>
+  <div class="split right">
+    <form class="form-container" id="employeeForm">
+      <div class="form-title">Create an account</div>
+      <div class="form-sub">Already have an account? <a href="#" class="form-login-link">Log in</a></div>
+      <div class="form-row">
+        <input type="text" class="form-input" placeholder="First name" required />
+        <input type="text" class="form-input" placeholder="Last name" required />
+      </div>
+      <input type="email" class="form-input" placeholder="Email" required />
+      <input type="password" class="form-input" placeholder="Enter your password" required />
+      <div class="form-checkbox-row">
+        <input type="checkbox" id="termsCheck" required />
+        <span>I agree to the <a href="#">Terms & Conditions</a></span>
+      </div>
+      <div id="termsError" style="color:#e94e77;font-size:0.98rem;display:none;margin-bottom:10px;">You must agree to the Terms & Conditions.</div>
+      <button type="submit" class="form-btn">Create account</button>
+      <div class="form-or">Or register with</div>
+      <div class="form-socials">
+        <button type="button" class="form-social-btn"><svg viewBox="0 0 24 24"><g><path fill="#EA4335" d="M21.805 10.023h-9.765v3.977h5.617c-.242 1.242-1.484 3.648-5.617 3.648-3.375 0-6.125-2.789-6.125-6.227s2.75-6.227 6.125-6.227c1.922 0 3.211.82 3.953 1.523l2.703-2.617c-1.711-1.57-3.914-2.539-6.656-2.539-5.523 0-10 4.477-10 10s4.477 10 10 10c5.781 0 9.594-4.055 9.594-9.773 0-.656-.07-1.156-.156-1.652z"/><path fill="#34A853" d="M3.17 6.582l3.281 2.406c.891-1.32 2.344-2.25 4.049-2.25 1.105 0 2.086.375 2.859 1.016l2.719-2.617c-1.711-1.57-3.914-2.539-6.656-2.539-3.617 0-6.68 2.055-8.211 5.016z"/><path fill="#4A90E2" d="M12 22c2.703 0 4.977-.891 6.617-2.422l-3.047-2.484c-.82.57-1.867.914-3.57.914-2.273 0-4.211-1.523-4.898-3.57l-3.242 2.5c1.523 2.953 4.586 5.062 8.14 5.062z"/><path fill="#FBBC05" d="M21.805 10.023h-9.765v3.977h5.617c-.242 1.242-1.484 3.648-5.617 3.648-3.375 0-6.125-2.789-6.125-6.227s2.75-6.227 6.125-6.227c1.922 0 3.211.82 3.953 1.523l2.703-2.617c-1.711-1.57-3.914-2.539-6.656-2.539-5.523 0-10 4.477-10 10s4.477 10 10 10c5.781 0 9.594-4.055 9.594-9.773 0-.656-.07-1.156-.156-1.652z" opacity=".15"/></g></svg> Google</button>
+      </div>
+    </form>
+  </div>
+</body>
+<script>
+document.getElementById('employeeForm').addEventListener('submit', function(e) {
+  var terms = document.getElementById('termsCheck');
+  var error = document.getElementById('termsError');
+  if (!terms.checked) {
+    error.style.display = 'block';
+    e.preventDefault();
+  } else {
+    error.style.display = 'none';
+  }
+});
+</script>
+</html> 
